@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CargaArchivos.Models;
 using Microsoft.AspNetCore.Hosting;
-//using Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
+//using Microsoft.AspNetCore.IWebHostEnvironment;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.Extensions.Hosting;
+
 namespace CargaArchivos.Controllers
 {
     public class ExplorerController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ExplorerController(IHostingEnvironment hostingEnvironment,
+        
+        public ExplorerController(IWebHostEnvironment hostingEnvironment,
                                   IHttpContextAccessor httpContextAccessor)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -25,6 +29,7 @@ namespace CargaArchivos.Controllers
         //
         // GET: /Explorer/
 
+       
         public IActionResult Index(string path)
         {
             var folderPath = _hostingEnvironment.ContentRootPath + "\\Folder\\";

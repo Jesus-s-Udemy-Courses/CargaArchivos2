@@ -64,7 +64,13 @@ namespace CargaArchivos
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                
+                    endpoints.MapControllerRoute(
+                        name: "Explorer",
+                        pattern: "Explorer/{*path}",
+                        defaults: new { controller = "Explorer", action = "Index" });
             });
+           
         }
     }
 }
