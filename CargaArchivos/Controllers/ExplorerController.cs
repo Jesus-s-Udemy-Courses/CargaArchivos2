@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using CargaArchivos.Models;
 using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.IWebHostEnvironment;
@@ -9,6 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
+
+
 
 namespace CargaArchivos.Controllers
 {
@@ -32,53 +37,114 @@ namespace CargaArchivos.Controllers
        
         public IActionResult Index(string path)
         {
-            var folderPath = _hostingEnvironment.ContentRootPath + "\\Folder\\";
-            // or folderPath = "FullPath of the folder on server" 
-
-            var realPath = folderPath + path;
-
-            if (System.IO.File.Exists(realPath))
+            
+          if (@User.Identity.Name == "1234567890asd")
             {
-                var fileBytes = System.IO.File.ReadAllBytes(realPath);
+                var folderPath = _hostingEnvironment.ContentRootPath + "\\Folder\\1234567890asd";
+                // or folderPath = "FullPath of the folder on server" 
 
-                //http://stackoverflow.com/questions/1176022/unknown-file-type-mime
-                return File(fileBytes, "application/force-download");
-            }
-            else if (System.IO.Directory.Exists(realPath))
-            {
-                List<DirModel> dirListModel = MapDirs(realPath);
+                var realPath = folderPath + path;
 
-                List<FileModel> fileListModel = MapFiles(realPath);
+                if (System.IO.File.Exists(realPath))
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(realPath);
 
-                ExplorerModel explorerModel = new ExplorerModel(dirListModel, fileListModel);
+                    //http://stackoverflow.com/questions/1176022/unknown-file-type-mime
+                    return File(fileBytes, "application/force-download");
+                }
+                else if (System.IO.Directory.Exists(realPath))
+                {
+                    List<DirModel> dirListModel = MapDirs(realPath);
 
-                //For using browser ability to correctly browsing the folders,
-                //Every path needs to end with slash
-                if (realPath.Last() != '/' && realPath.Last() != '\\')
-                { explorerModel.URL = "/Explorer/" + path + "/"; }
+                    List<FileModel> fileListModel = MapFiles(realPath);
+
+                    ExplorerModel explorerModel = new ExplorerModel(dirListModel, fileListModel);
+
+                    //For using browser ability to correctly browsing the folders,
+                    //Every path needs to end with slash
+                    if (realPath.Last() != '/' && realPath.Last() != '\\')
+                    { explorerModel.URL = "/Explorer/" + path + "/"; }
+                    else
+                    { explorerModel.URL = "/Explorer/" + path; }
+
+                    var request = _httpContextAccessor.HttpContext.Request;
+
+                    UriBuilder uriBuilder = new UriBuilder
+                    { Path = request.Path.ToString() };
+
+                    //Gettin the current directory name using page URL.
+                    explorerModel.FolderName = WebUtility.UrlDecode(uriBuilder.Uri.Segments.Last());
+
+                    //Making a URL to going up one level. 
+                    Uri uri = new Uri(uriBuilder.Uri.AbsoluteUri.Remove
+                                        (uriBuilder.Uri.AbsoluteUri.Length - uriBuilder.Uri.Segments.Last().Length));
+
+                    explorerModel.ParentFolderName = uri.AbsolutePath;
+
+                    return View(explorerModel);
+                }
                 else
-                { explorerModel.URL = "/Explorer/" + path; }
+                {
+                    return Content(path + " is not a valid file or directory.");
+                }
+            }
+            if (@User.Identity.Name == "123456789012")
+            {
+                var folderPath = _hostingEnvironment.ContentRootPath + "\\Folder\\123456789012";
+                // or folderPath = "FullPath of the folder on server" 
 
-                var request = _httpContextAccessor.HttpContext.Request;
+                var realPath = folderPath + path;
 
-                UriBuilder uriBuilder = new UriBuilder
-                { Path = request.Path.ToString() };
+                if (System.IO.File.Exists(realPath))
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(realPath);
 
-                //Gettin the current directory name using page URL.
-                explorerModel.FolderName = WebUtility.UrlDecode(uriBuilder.Uri.Segments.Last());
+                    //http://stackoverflow.com/questions/1176022/unknown-file-type-mime
+                    return File(fileBytes, "application/force-download");
+                }
+                else if (System.IO.Directory.Exists(realPath))
+                {
+                    List<DirModel> dirListModel = MapDirs(realPath);
 
-                //Making a URL to going up one level. 
-                Uri uri = new Uri(uriBuilder.Uri.AbsoluteUri.Remove
-                                    (uriBuilder.Uri.AbsoluteUri.Length - uriBuilder.Uri.Segments.Last().Length));
+                    List<FileModel> fileListModel = MapFiles(realPath);
 
-                explorerModel.ParentFolderName = uri.AbsolutePath;
+                    ExplorerModel explorerModel = new ExplorerModel(dirListModel, fileListModel);
 
-                return View(explorerModel);
+                    //For using browser ability to correctly browsing the folders,
+                    //Every path needs to end with slash
+                    if (realPath.Last() != '/' && realPath.Last() != '\\')
+                    { explorerModel.URL = "/Explorer/" + path + "/"; }
+                    else
+                    { explorerModel.URL = "/Explorer/" + path; }
+
+                    var request = _httpContextAccessor.HttpContext.Request;
+
+                    UriBuilder uriBuilder = new UriBuilder
+                    { Path = request.Path.ToString() };
+
+                    //Gettin the current directory name using page URL.
+                    explorerModel.FolderName = WebUtility.UrlDecode(uriBuilder.Uri.Segments.Last());
+
+                    //Making a URL to going up one level. 
+                    Uri uri = new Uri(uriBuilder.Uri.AbsoluteUri.Remove
+                                        (uriBuilder.Uri.AbsoluteUri.Length - uriBuilder.Uri.Segments.Last().Length));
+
+                    explorerModel.ParentFolderName = uri.AbsolutePath;
+
+                    return View(explorerModel);
+                }
+                else
+                {
+                    return Content(path + " is not a valid file or directory.");
+                }
             }
             else
             {
-                return Content(path + " is not a valid file or directory.");
+                return Content(path + " Carpeta no econtrada, intente más tarde.");
             }
+
+           
+           
         }
 
         private List<DirModel> MapDirs(String realPath)

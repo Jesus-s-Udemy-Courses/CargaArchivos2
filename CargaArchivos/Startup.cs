@@ -61,8 +61,8 @@ namespace CargaArchivos
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    name: "Directorio",
+                    pattern: "{controller=Explorer}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 
                     endpoints.MapControllerRoute(

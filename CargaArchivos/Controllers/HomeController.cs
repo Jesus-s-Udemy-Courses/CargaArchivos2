@@ -20,6 +20,7 @@ namespace CargaArchivos.Controllers
 
         public IActionResult Index()
         {
+
             return View();
         }
 
