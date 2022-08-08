@@ -20,7 +20,7 @@
             <img src="~/images/folder.png" alt="Folder Logo" align="top" style="width: 20px;
                 height: 20px; border: none" />
             <a href="@(Model.URL + dir.DirName)/" title="@dir.DirName">@dir.DirName</a>
-            . . . . . . @dir.DirAccessed
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @dir.DirAccessed
         </li>
     }
     @*Listing the files *@
@@ -30,8 +30,8 @@
             <a href="@(Model.URL + file.FileName)"
                title="@file.FileName" target="_blank">
                 @file.FileName
-            </a>. . . . . . @file.FileSizeText
-            . . . . . . @file.FileAccessed
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @file.FileSizeText
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @file.FileAccessed
         </li>
     }
 </ul>
